@@ -5,11 +5,11 @@ import * as jwt from "jsonwebtoken";
 import { tokenKey } from "../secrets";
 import { BadRequest } from "../exceptions/bad_request";
 import { ErrorCode } from "../exceptions/root";
-import { signupSchema } from "../schema/user";
+import { SignupSchema } from "../schema/user";
 
 export const signup=async(req:Request,res: Response,next: NextFunction)=>{
      
-        signupSchema.parse(req.body);  
+        SignupSchema.parse(req.body);  
      const {userName,email,password}=req.body;
      console.log(req.body);
      
@@ -64,9 +64,10 @@ export const login=async(req:Request,res: Response,next:NextFunction)=>{
 }
 
 
-export const me=async(req:Request,res: Response)=>{
+export const me=async(req:Request,res: Response,next:NextFunction)=>{
        
-        const token=req.headers;
+       
+    return res.json(req.body)
         
         
-            }
+}

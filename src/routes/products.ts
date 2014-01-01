@@ -1,53 +1,22 @@
 import express, {Express, Request, Response, Router} from 'express';
+import { prismaClient } from '..';
+import { NextFunction } from 'express';
+import { addProduct, deleteProductById, getProductById, getProducts, updateProductById } from '../controllers/product';
+import { errorHandler } from '../error_handler';
 
 
 const productRoute: Router=express.Router();
 
-productRoute.post("/products",(req:Request,res: Response)=>{
+productRoute.post("/products",errorHandler(addProduct));
+    
+productRoute.get("/products",errorHandler(getProducts));
+    
+productRoute.get("/product:id",errorHandler(getProductById));
+    
+ productRoute.put("/product:id",errorHandler(updateProductById));
 
-    try{
-    
-    }catch(e){
-    
-    }
-});
-    
-productRoute.get("/products",(req:Request,res: Response)=>{
-    
-        try{
-        
-        }catch(e){
-            
-        }
- });
-    
-productRoute.get("/product:id",(req:Request,res: Response)=>{
-    
-            try{
-            
-            }catch(e){
-                
-            }
- });
-    
- productRoute.put("/product:id",(req:Request,res: Response)=>{
-    
-    try{
-    
-    }catch(e){
-        
-    }
-});
-
-productRoute.delete("/product:id",(req:Request,res: Response)=>{
-    
-    try{
-    
-    }catch(e){
-        
-    }
-});
+productRoute.delete("/product:id",errorHandler(deleteProductById));
 
 
     
-module.exports=productRoute;
+export default productRoute;

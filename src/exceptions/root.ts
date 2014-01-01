@@ -1,9 +1,9 @@
 
-export class HTTPExceptions extends Error{
+export class HTTPException extends Error{
     message:string;
     errorCode:ErrorCode;
     statusCode:number;
-    error:any;
+    errors:ErrorCode;
 
     constructor(
         message:string,
@@ -15,7 +15,7 @@ export class HTTPExceptions extends Error{
             this.message=message
             this.statusCode=statusCode
             this.errorCode=errorCode
-            this.error=error
+            this.errors=error
         };
 }
 
@@ -25,5 +25,6 @@ export const enum ErrorCode{
     WrongPassword=2003,
     ValidationError=2004,
     InternalServerError=500,
+    Unauthorized=401,
 
 }
