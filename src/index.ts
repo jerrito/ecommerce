@@ -1,7 +1,20 @@
 import express, {Express, Request, Response} from "express";
+import rootRoute from './routes/root';
+import { PrismaClient } from "@prisma/client";
+import { PORT } from "./secrets";
+
 
 const app: Express=express();
-const port: number=5000;
+
+app.use(express.json());
+app.use("/api",rootRoute);
+
+
+
+export const prismaClient=new PrismaClient({
+    log:["query"],
+
+})
 
 
 app.get("/home",(req: Request,res: Response)=>{
@@ -10,6 +23,6 @@ app.get("/home",(req: Request,res: Response)=>{
 })
 
 
-app.listen(port,"127.0.0.1",()=>{
-    console.log(`Server is running on port ${port}`);
+app.listen(Number(PORT),"127.0.0.1",()=>{
+    console.log(`Server is running on port ${PORT}`);
 })
