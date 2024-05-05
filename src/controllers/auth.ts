@@ -45,10 +45,10 @@ export const login=async(req:Request,res: Response)=>{
        id: tokenData,
     },tokenKey);
     //jwt.verify();
-    res.status(200).json({token,...user})
+    res.status(200).json({...user,token})
 
     }catch(e:any){
-        res.status(500).json({"err":e.message});
+        res.status(500).json({"error":e.message});
     }
 }
 
@@ -56,7 +56,7 @@ export const login=async(req:Request,res: Response)=>{
 export const me=async(req:Request,res: Response)=>{
         try{
         
-        }catch(e){
-            res.status(500).json({"err":""});
+        }catch(e:any){
+            res.status(500).json({"error":e.message});
         }
             }
