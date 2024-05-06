@@ -1,6 +1,6 @@
 import { ErrorCode, HTTPExceptions } from "./root";
 
-class BadRequest extends HTTPExceptions{
+export class BadRequest extends HTTPExceptions{
     
     constructor(
         message:string,
