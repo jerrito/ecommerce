@@ -6,9 +6,12 @@ import { tokenKey } from "../secrets";
 import { BadRequest } from "../exceptions/bad_request";
 import { error } from "console";
 import { ErrorCode } from "../exceptions/root";
+import { ValidationError } from "../exceptions/validation";
+import { signupSchema } from "../schema/user";
 
 export const signup=async(req:Request,res: Response,next: NextFunction)=>{
-    try{    
+    try{  
+        signupSchema.parse(req.body);  
      const {userName,email,password}=req.body;
      console.log(req.body);
      
@@ -30,7 +33,10 @@ export const signup=async(req:Request,res: Response,next: NextFunction)=>{
     res.status(200).json(user); 
 
     }catch(e:any){
-    res.status(500).json({"msg":e.message},)
+        next(
+            new ValidationError(e?.issues,"Validation error",ErrorCode.ValidationError,)
+        );
+   // res.status(500).json({"msg":e.message},)
     }
     }
 
@@ -61,6 +67,7 @@ export const login=async(req:Request,res: Response)=>{
 
 export const me=async(req:Request,res: Response)=>{
         try{
+        const token=req.headers;
         
         }catch(e:any){
             res.status(500).json({"error":e.message});

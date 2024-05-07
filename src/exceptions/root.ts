@@ -23,5 +23,6 @@ export const enum ErrorCode{
     UserNotFound=2000,
     UserAlreadyExist=2001,
     WrongPassword=2003,
+    ValidationError=2004
 
 }
