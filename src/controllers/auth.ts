@@ -4,9 +4,7 @@ import { hashSync, compareSync } from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import { tokenKey } from "../secrets";
 import { BadRequest } from "../exceptions/bad_request";
-import { error } from "console";
 import { ErrorCode } from "../exceptions/root";
-import { ValidationError } from "../exceptions/validation";
 import { signupSchema } from "../schema/user";
 
 export const signup=async(req:Request,res: Response,next: NextFunction)=>{
@@ -18,8 +16,8 @@ export const signup=async(req:Request,res: Response,next: NextFunction)=>{
     let user=await prismaClient.user.findFirst(
         {where:{email:email},},);
      if(user){
-     next(new BadRequest("User already exist",ErrorCode.UserAlreadyExist
-    ))
+    return new BadRequest("User already exist",ErrorCode.UserAlreadyExist
+    )
      //res.status(404).send("User already exist",);
      }
     user=await prismaClient.user.create({
@@ -43,19 +41,19 @@ export const login=async(req:Request,res: Response,next:NextFunction)=>{
         where:{email}});
         if(!user){
 
-          return  next(new BadRequest(
+          return  new BadRequest(
               "User not found",
               ErrorCode.UserNotFound  
-            ));
+            );
        // return res.status(404).send("User not found");
         }
 
         const checkPassword=compareSync(password,user.password,);
         if(!checkPassword){
-         return   next(new BadRequest(
+         return  new BadRequest(
                 "Password incorrect",
                 ErrorCode.WrongPassword
-            ));
+            );
         //return res.status(400).send("Password incorrect",);
         }
     const token=jwt.sign({

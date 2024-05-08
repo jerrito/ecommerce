@@ -4,9 +4,9 @@ import { InternalException } from "./exceptions/internal_exception";
 
 export const errorHandler=(method:Function)=>{
 
-    return (req:Request,res:Response,next:NextFunction)=>{
+    return async (req:Request,res:Response,next:NextFunction)=>{
        try{
-        method(req,res,next);
+      await  method(req,res,next);
        }catch(error:any){
 
         let exception:HTTPExceptions;
