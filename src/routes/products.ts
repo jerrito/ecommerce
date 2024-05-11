@@ -3,6 +3,8 @@ import { prismaClient } from '..';
 import { NextFunction } from 'express';
 import { addProduct, deleteProductById, getProductById, getProducts, updateProductById } from '../controllers/product';
 import { errorHandler } from '../error_handler';
+import authMiddleware from '../middlewares/auth';
+import { adminMiddleware } from '../middlewares/admin';
 
 
 const productRoute: Router=express.Router();
