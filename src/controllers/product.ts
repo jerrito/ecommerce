@@ -20,7 +20,16 @@ export const addProduct=async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
+   
+    const count=await prismaClient.products.count();
 
+    const products=await prismaClient.products.findMany({
+        skip: +req.query | 0,
+        take:5
+    });
+
+
+    res.json({count,data:products});
    
  }
 
@@ -57,12 +66,21 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
  export const deleteProductById=async(req:Request,res:Response,next:NextFunction)=>{
 
     try{
+        const product=req.body;
         
+        const deleteProduct=prismaClient.products.delete({
+         where:{
+               id: +req.params.id
+            }
+        });
+
+         res.json(deleteProduct);
+
     }catch(e){
         throw new NotFoundException(
             "Product not found",
             ErrorCode.Unauthorized
-        )
+        );
     }
  }
 

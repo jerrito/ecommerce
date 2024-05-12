@@ -6,7 +6,7 @@ import { tokenKey } from "../secrets";
 import { PrismaClient, User } from '@prisma/client';
 import { prismaClient } from "..";
 
- const authMiddleware =(req:Request,re:Response,next:NextFunction)=>{
+ const authMiddleware =async (req:Request,res:Response,next:NextFunction)=>{
 
 
     // 1. retrieve token from header 
@@ -31,18 +31,18 @@ import { prismaClient } from "..";
 
 // 4. Attach user to current request object
 
- const user=prismaClient.user.findFirst({
+ const user=await prismaClient.user.findFirst({
     where:{id:payload.id}
  })
 
  if(!user){
-     next(new UnAuthorizedException(
+    return next(new UnAuthorizedException(
         "Unauthorized",
         ErrorCode.Unauthorized,
     ),);
     }
 
-   req.user = user; 
+   req.user  = user; 
    next();
  
    }catch(e){

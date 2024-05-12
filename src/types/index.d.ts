@@ -1,11 +1,14 @@
+
+import { Express, Request  } from 'express-serve-static-core';
+//import {Request } from "express";
 import { User } from '@prisma/client';
-import { Express, Request as ExpressRequest } from 'express-serve-static-core';
-import {Request } from "express";
 
 declare global {
  declare namespace Express {
-export   interface Request  extends Express.Request {
-    user?: User;
+export   interface Request {
+  
+   user :User? ;
+  
   }
 }
 }

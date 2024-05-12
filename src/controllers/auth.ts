@@ -1,26 +1,34 @@
 import {Response, Request, NextFunction} from "express";
-import { prismaClient } from "..";
+//import { prismaClient as prisma } from "..";
 import { hashSync, compareSync } from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import { tokenKey } from "../secrets";
 import { BadRequest } from "../exceptions/bad_request";
 import { ErrorCode } from "../exceptions/root";
 import { SignupSchema } from "../schema/user";
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@prisma/client'
 
+const connectionString = `${process.env.DATABASE_URL}`
+
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+const prisma = new PrismaClient({ adapter })
 export const signup=async(req:Request,res: Response,next: NextFunction)=>{
      
         SignupSchema.parse(req.body);  
      const {userName,email,password}=req.body;
      console.log(req.body);
      
-    let user=await prismaClient.user.findFirst(
+    let user=await prisma.user.findFirst(
         {where:{email:email},},);
      if(user){
     return new BadRequest("User already exist",ErrorCode.UserAlreadyExist
     )
      //res.status(404).send("User already exist",);
      }
-    user=await prismaClient.user.create({
+    user=await prisma.user.create({
         data:{
             userName,
             email:email,
@@ -37,7 +45,7 @@ export const login=async(req:Request,res: Response,next:NextFunction)=>{
 
     const {email,password,tokenData}=req.body;
 
-    const user=await prismaClient.user.findFirst({
+    const user=await prisma.user.findFirst({
         where:{email}});
         if(!user){
 
