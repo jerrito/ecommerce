@@ -17,14 +17,14 @@ const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 export const signup=async(req:Request,res: Response,next: NextFunction)=>{
      
-        SignupSchema.parse(req.body);  
-     const {userName,email,password}=req.body;
-     console.log(req.body);
+    SignupSchema.parse(req.body);  
+    const {userName,email,password}=req.body;
+    console.log(req.body);
      
     let user=await prisma.user.findFirst(
         {where:{email:email},},);
      if(user){
-    return new BadRequest("User already exist",ErrorCode.UserAlreadyExist
+     new BadRequest("User already exist",ErrorCode.UserAlreadyExist
     )
      //res.status(404).send("User already exist",);
      }
@@ -75,7 +75,7 @@ export const login=async(req:Request,res: Response,next:NextFunction)=>{
 export const me=async(req:Request,res: Response,next:NextFunction)=>{
        
        
-    return res.json(req.body)
+    return res.json(req.user);
         
         
 }

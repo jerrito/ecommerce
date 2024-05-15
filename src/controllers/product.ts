@@ -3,16 +3,17 @@ import { prismaClient } from ".."
 import { productSchemaValidator } from "../schema/product"
 import { NotFoundException } from "../exceptions/not_found";
 import { ErrorCode } from "../exceptions/root";
+import { BadRequest } from "../exceptions/bad_request";
 
 
 export const addProduct=async(req:Request,res:Response,next:NextFunction)=>{
 
     productSchemaValidator.parse(req.body);
 
-    const product=prismaClient.user.create({
+    const product=prismaClient.products.create({
         data:{
             ...req.body,
-           // tags:req.body.tags.join(",")
+           tags:req.body.tags.join(",")
         }
     });
 
@@ -34,8 +35,19 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
  }
 
  export const getProductById=async(req:Request,res:Response,next:NextFunction)=>{
+  try{
+    const product=prismaClient.products.findFirstOrThrow({
+        where:{
+            id:+req.params.id,
+        }
+    });
 
-    // const product=prismaClient.
+    res.status(200).json(product);
+    }catch(e){
+
+        new BadRequest("Product not found",
+        ErrorCode.ProductNotFound)
+    }
  }
 
  export const updateProductById=async(req:Request,res:Response,next:NextFunction)=>{
@@ -56,9 +68,9 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
         res.json(updatedProduct);
     }catch(e){
        
-        throw new NotFoundException(
+        new BadRequest(
             "Product not found",
-            ErrorCode.Unauthorized
+            ErrorCode.ProductNotFound
         );
     }
  }
@@ -66,7 +78,7 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
  export const deleteProductById=async(req:Request,res:Response,next:NextFunction)=>{
 
     try{
-        const product=req.body;
+        
         
         const deleteProduct=prismaClient.products.delete({
          where:{
@@ -77,9 +89,9 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
          res.json(deleteProduct);
 
     }catch(e){
-        throw new NotFoundException(
+         new NotFoundException(
             "Product not found",
-            ErrorCode.Unauthorized
+            ErrorCode.ProductNotFound
         );
     }
  }
