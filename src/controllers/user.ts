@@ -10,25 +10,16 @@ export const addAddress=async(req:Request,res:Response,next:NextFunction)=>{
   const {formattedaddress,lat,lng,country,city} =req.body;
   
   addressValidator.parse(req.body);
-  let user:User;
+  
 
-  try{
-  user= await prismaClient.user.findFirstOrThrow({
-    where:{
-        id:req.body.id
-    }
- })
-
-  }catch(e){
-    new NotFoundException("User not found",
-    ErrorCode.UserNotFound)
-  }
+ 
+ 
     
 
   const address= await prismaClient.address.create({
         data:{
             ...req.body,
-            userId:user.id
+            userId:req?.user?.id 
         }
     });
 
@@ -38,8 +29,31 @@ export const addAddress=async(req:Request,res:Response,next:NextFunction)=>{
 
 
 export const listAddress=async(req:Request,res:Response,next:NextFunction)=>{
+
+  const address=await prismaClient.address.findMany({
+    where:{
+      id:req?.user?.id
+    }
+  });
+
+  return res.status(200).json(address);
+
 }
 
 export const deleteAddress=async(req:Request,res:Response,next:NextFunction)=>{
 
+  try{
+  const address=await prismaClient.address.delete({
+    where:{
+      id:+req.params.id
+    }
+  });
+
+   return res.status(200).json({success:true});
+  }catch(e){
+    throw new NotFoundException(
+      "Address not found",
+      ErrorCode.ProductNotFound
+    )
+  }
 }
