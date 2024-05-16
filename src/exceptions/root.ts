@@ -26,6 +26,7 @@ export const enum ErrorCode{
     ValidationError=2004,
     InternalServerError=500,
     Unauthorized=401,
+    AddressNotFound=405,
     ProductNotFound=403
 
 }

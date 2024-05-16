@@ -1,9 +1,11 @@
 import {Request,Response, NextFunction } from "express";
 import { prismaClient } from ".."
 import { addressValidator } from "../schema/address";
-import { User } from '@prisma/client';
+import { Address, Prisma, User } from '@prisma/client';
 import { NotFoundException } from "../exceptions/not_found";
 import { ErrorCode } from "../exceptions/root";
+import { BadRequest } from "../exceptions/bad_request";
+import { UpdateSchema as UpdateUserSchema } from "../schema/user";
 
 
 export const addAddress=async(req:Request,res:Response,next:NextFunction)=>{
@@ -43,7 +45,7 @@ export const listAddress=async(req:Request,res:Response,next:NextFunction)=>{
 export const deleteAddress=async(req:Request,res:Response,next:NextFunction)=>{
 
   try{
-  const address=await prismaClient.address.delete({
+      await prismaClient.address.delete({
     where:{
       id:+req.params.id
     }
@@ -56,4 +58,71 @@ export const deleteAddress=async(req:Request,res:Response,next:NextFunction)=>{
       ErrorCode.ProductNotFound
     )
   }
+}
+
+
+export const updateUser=async(req:Request,res:Response)=>{
+   const userUpdateValidator=UpdateUserSchema.parse(req.body);
+   
+   let shippingAddress:Address;
+   let billingAddress:Address;
+   
+   if(userUpdateValidator.defaultShippingAddressId){
+  
+    try{
+  
+    shippingAddress=await prismaClient.address.findFirstOrThrow({
+    where:{
+      id: userUpdateValidator.defaultShippingAddressId,
+    }
+  },);
+  if(shippingAddress.id != req?.user?.id){
+
+    throw new BadRequest(
+      "Address does not belong to user",
+      ErrorCode.AddressNotFound
+    )
+  }
+}catch(e){
+   new BadRequest(
+    "Address not found",
+    ErrorCode.AddressNotFound
+   )
+}
+   }
+
+
+   if(userUpdateValidator.defaultBillingAddressId){
+    try{
+    
+      billingAddress=await prismaClient.address.findFirstOrThrow({
+      where:{
+        id: userUpdateValidator.defaultBillingAddressId,
+      }
+    },);
+
+    if(billingAddress.id != req?.user?.id){
+
+      throw new BadRequest(
+        "Address does not belong to user",
+        ErrorCode.AddressNotFound
+      )
+    }
+   
+  }catch(e){
+     new BadRequest(
+      "Address not found",
+      ErrorCode.AddressNotFound
+     )
+  }
+     }
+
+     const updateUser=await prismaClient.user.update({
+      where:{
+        id:req?.user?.id
+      },
+      data: userUpdateValidator as Prisma.JsonObject 
+     })
+
+  res.status(200).json(updateUser);
 }
