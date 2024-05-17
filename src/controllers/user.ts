@@ -1,12 +1,19 @@
 import {Request,Response, NextFunction } from "express";
-import { prismaClient } from ".."
 import { addressValidator } from "../schema/address";
 import { Address, Prisma, User } from '@prisma/client';
 import { NotFoundException } from "../exceptions/not_found";
 import { ErrorCode } from "../exceptions/root";
 import { BadRequest } from "../exceptions/bad_request";
 import { UpdateSchema as UpdateUserSchema } from "../schema/user";
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@prisma/client'
 
+const connectionString = `${process.env.DATABASE_URL}`
+
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+const prismaClient = new PrismaClient({ adapter })
 
 export const addAddress=async(req:Request,res:Response,next:NextFunction)=>{
   const {formattedaddress,lat,lng,country,city} =req.body;

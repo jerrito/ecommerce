@@ -1,10 +1,17 @@
 import { NextFunction, Response,Request } from "express"
-import { prismaClient } from ".."
 import { productSchemaValidator } from "../schema/product"
 import { NotFoundException } from "../exceptions/not_found";
 import { ErrorCode } from "../exceptions/root";
 import { BadRequest } from "../exceptions/bad_request";
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@prisma/client'
 
+const connectionString = `${process.env.DATABASE_URL}`
+
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+const prismaClient = new PrismaClient({ adapter })
 
 export const addProduct=async(req:Request,res:Response,next:NextFunction)=>{
 

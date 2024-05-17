@@ -13,7 +13,7 @@ rootRoute.use("/auth",authRoute);
 
 
 // products
-rootRoute.use("/products",[authMiddleware,adminMiddleware],productRoute);
+rootRoute.use([authMiddleware,adminMiddleware],productRoute);
 
 // user 
 rootRoute.use("/user",[authMiddleware],userRoute)

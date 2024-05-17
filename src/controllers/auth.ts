@@ -18,7 +18,8 @@ const prisma = new PrismaClient({ adapter })
 export const signup=async(req:Request,res: Response,next: NextFunction)=>{
      
     SignupSchema.parse(req.body);  
-    const {userName,email,password}=req.body;
+    const {userName,email,password,role}=req.body;
+   
     console.log(req.body);
      
     let user=await prisma.user.findFirst(
@@ -33,6 +34,7 @@ export const signup=async(req:Request,res: Response,next: NextFunction)=>{
             userName,
             email:email,
             password:hashSync(password,10),
+            role:role
             
         }
     })  
@@ -46,7 +48,7 @@ export const login=async(req:Request,res: Response,next:NextFunction)=>{
     const {email,password,tokenData}=req.body;
 
     const user=await prisma.user.findFirst({
-        where:{email}});
+        where:{email:email}});
         if(!user){
 
           return  new BadRequest(
@@ -58,17 +60,17 @@ export const login=async(req:Request,res: Response,next:NextFunction)=>{
 
         const checkPassword=compareSync(password,user.password,);
         if(!checkPassword){
-         return  new BadRequest(
+         throw new BadRequest(
                 "Password incorrect",
                 ErrorCode.WrongPassword
             );
         //return res.status(400).send("Password incorrect",);
         }
     const token=jwt.sign({
-       id: tokenData,
+       userId: user.id,
     },tokenKey);
     //jwt.verify();
-    res.status(200).json({...user,token})
+    res.status(200).json({"user":user,"token":token});
 }
 
 
