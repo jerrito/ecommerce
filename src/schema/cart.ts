@@ -7,3 +7,8 @@ export const cartSchemaValidator=z.object({
 
 
 })
+
+
+export const updateCartSchemaValidator=z.object({
+    quantity:z.number(),
+})

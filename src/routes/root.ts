@@ -20,7 +20,7 @@ rootRoute.use([authMiddleware,adminMiddleware],productRoute);
 // user 
 rootRoute.use("/user",[authMiddleware],userRoute)
 
-// order 
+// cart
 rootRoute.use( [authMiddleware],cartRoute)
 
 

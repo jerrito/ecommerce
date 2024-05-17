@@ -29,6 +29,7 @@ model User{
    updatedAt DateTime @updatedAt
    address Address[]
    cart Cart[]
+   order Order[]
    @@map("Users")
    
 }
@@ -58,6 +59,7 @@ model Products{
   createsAt DateTime  @default(now())
   updateAt DateTime @updatedAt
   cart Cart[]
+  orders OrderProducts[]
   @@map("products")
 }
 
@@ -72,4 +74,31 @@ model Cart{
   createdAt DateTime  @default(now())
   updatedAt DateTime @updatedAt
   @@map("cart")
+}
+
+model Order{
+  id Int @id @default(autoincrement())
+  quantity Int
+  userId Int
+  netAmount Decimal
+  address String
+  user User @relation(fields: [userId],references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  product OrderProducts[]
+  @@map("order")
+}
+
+model OrderProducts{
+  id Int @id @default(autoincrement())
+  quantity Int
+  orderId Int
+  netAmount Decimal
+  address String
+  order Order @relation(fields: [orderId],references: [id])
+   productId Int
+  product Products @relation(fields: [productId],references: [id])
+ createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("order_product")
 }

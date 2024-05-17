@@ -1,5 +1,5 @@
 import {Request,Response, NextFunction } from "express";
-import { cartSchemaValidator } from "../schema/cart";
+import { cartSchemaValidator, updateCartSchemaValidator } from "../schema/cart";
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient, Products } from '@prisma/client'
@@ -15,6 +15,8 @@ const prismaClient = new PrismaClient({ adapter })
 export const addItemToCart=async(req:Request,res:Response,next:NextFunction)=>{
     const validate=cartSchemaValidator.parse(req.body);
  
+
+    //: TODO check if product is already added to cart and increase its quantity
     let product:Products;
   
     try{
@@ -48,26 +50,48 @@ res.status(200).json(cart);
 
 export const getCart=async(req:Request,res:Response,next:NextFunction)=>{
 
+  const cart=await prismaClient.cart.findMany({
+    where:{
+     userId:req.user?.id
+    },
+    include:{
+      product:true
+    }
+  });
+
+  res.status(200).json(cart);
     
 };
 
 
 export const deleteItemToCart=async(req:Request,res:Response,next:NextFunction)=>{
-
-    
+     
   await prismaClient.cart.delete({
     where:{
-        id:req!.user!.id,
-        productId:3
-
+        id:+req.params.id,
+        userId:req.user?.id
     }
   });
 
+  res.status(200).json({"success":true});
 };
 
 
 export const changeQuantity=async(req:Request,res:Response,next:NextFunction)=>{
+  const {quantity}=req.body;
+  const validator=updateCartSchemaValidator.parse(quantity);
+  const updateCartItemQuantity=await prismaClient.cart.update({
 
+    where:{
+      id:+req.params.id,
+      userId:req.user?.id
+    },
+    data:{
+      quantity:validator.quantity
+    }
+  });
+
+  res.status(200).json(updateCartItemQuantity);
     
     
 };
