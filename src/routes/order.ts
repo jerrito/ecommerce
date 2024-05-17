@@ -1,36 +1,19 @@
 import express, {Express, Request, Response, Router} from "express";
+import { createOrders, getOrderById, getOrders } from "../controllers/order";
+import authMiddleware from "../middlewares/auth";
+import { errorHandler } from "../error_handler";
 
 
 const orderRoute:Router=express.Router();
 
 
-orderRoute.get("/orders",(req:Request,res: Response)=>{
-
-try{
-
-}catch(e){
-
-}
-})
-
-orderRoute.post("/orders",(req:Request,res: Response)=>{
-
-    try{
-    
-    }catch(e){
-        
-    }
-    })
+orderRoute.get("/orders", errorHandler(getOrders))
 
 
-    orderRoute.get("/orders/:id",(req:Request,res: Response)=>{
-
-        try{
-        
-        }catch(e){
-            
-        }
-            })
+orderRoute.post("/orders",errorHandler( createOrders))
 
 
-module.exports=orderRoute;
+orderRoute.get("/orders/:id",errorHandler(getOrderById))
+
+
+export default orderRoute;

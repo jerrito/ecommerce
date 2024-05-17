@@ -9,6 +9,6 @@ export const SignupSchema=z.object({
 
 export const UpdateSchema=z.object({
     userName:z.string().nullable(),
-    defaultShippingAddressId:z.number(),
-    defaultBillingAddressId:z.number(),
+    defaultShippingAddressId:z.number().optional(),
+    defaultBillingAddressId:z.number().optional(),
 })

@@ -1,35 +1,19 @@
 import express, {Express, Request, Response, Router} from "express";
+import { addItemToCart, changeQuantity, deleteItemToCart, getCart } from "../controllers/cart";
+import authMiddleware from "../middlewares/auth";
+import { errorHandler } from "../error_handler";
 
 
 const cartRoute:Router=express.Router();
 
 
-cartRoute.post("/cart",(req:Request,res: Response)=>{
+cartRoute.post("/cart",[authMiddleware],errorHandler(addItemToCart))
 
-try{
+cartRoute.get("/cart",[authMiddleware],errorHandler(getCart))
 
-}catch(e){
+cartRoute.delete("/cart/:id",[authMiddleware],errorHandler(deleteItemToCart))
 
-}
-})
-
-cartRoute.get("/cart",(req:Request,res: Response)=>{
-
-    try{
-    
-    }catch(e){
-        
-    }
-    })
-
-cartRoute.put("/cart",(req:Request,res: Response)=>{
-
-        try{
-        
-        }catch(e){
-            
-        }
-})
+cartRoute.put("/cart/:id",[authMiddleware],errorHandler(changeQuantity))
 
 
-module.exports=cartRoute;
+export default cartRoute;
