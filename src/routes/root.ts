@@ -6,6 +6,7 @@ import { adminMiddleware } from "../middlewares/admin";
 import userRoute from "./user";
 import orderRoute from "./order";
 import cartRoute from "./cart";
+import adminRoute from "./admin";
 
 
 const rootRoute: Router=Router();
@@ -27,4 +28,9 @@ rootRoute.use( [authMiddleware],cartRoute)
 // order
 rootRoute.use([authMiddleware],orderRoute)
 
+
+// admin
+rootRoute.use([authMiddleware,adminMiddleware],adminRoute);
+
+rootRoute.use("*",)
 export default rootRoute;

@@ -16,6 +16,21 @@ app.use("/api",rootRoute);
 export const prismaClient=new PrismaClient({
     log:["query"],
 
+}).$extends({
+    result:{
+        address:{
+            formattedAddress:{
+                needs:{
+                    formattedddress:true,
+                    city:true,
+                    country:true
+                },
+                compute:(addr)=>{
+                    return `${addr.formattedddress} ${addr.city} ${addr.country}`;
+                }
+            }
+        }
+    }
 })
 
 

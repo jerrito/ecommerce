@@ -9,15 +9,15 @@ import { adminMiddleware } from '../middlewares/admin';
 
 const productRoute: Router=express.Router();
 
-productRoute.post("/products",[authMiddleware,adminMiddleware],errorHandler(addProduct));
+productRoute.post("/products",[adminMiddleware],errorHandler(addProduct));
     
-productRoute.get("/products",[authMiddleware],errorHandler(getProducts));
+productRoute.get("/products",errorHandler(getProducts));
     
-productRoute.get("/product:id",[authMiddleware],errorHandler(getProductById));
+productRoute.get("/product:id",errorHandler(getProductById));
     
- productRoute.put("/product:id",[authMiddleware,adminMiddleware],errorHandler(updateProductById));
+ productRoute.put("/product:id",[adminMiddleware],errorHandler(updateProductById));
 
-productRoute.delete("/product:id",[authMiddleware,adminMiddleware],errorHandler(deleteProductById));
+productRoute.delete("/product:id",[adminMiddleware],errorHandler(deleteProductById));
 
 
     

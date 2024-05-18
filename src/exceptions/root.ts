@@ -19,14 +19,15 @@ export class HTTPException extends Error{
         };
 }
 
-export const enum ErrorCode{
-    UserNotFound=2000,
-    UserAlreadyExist=2001,
-    WrongPassword=2003,
-    ValidationError=2004,
-    InternalServerError=500,
-    Unauthorized=401,
-    AddressNotFound=405,
-    ProductNotFound=403
 
+export const enum ErrorCode {
+    UserNotFound = 2000,
+    UserAlreadyExist = 2001,
+    WrongPassword = 2003,
+    ValidationError = 2004,
+    InternalServerError = 500,
+    Unauthorized = 401,
+    AddressNotFound = 405,
+    ProductNotFound = 403,
+    OrderNotFound = 409
 }
