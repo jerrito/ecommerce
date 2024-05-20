@@ -7,6 +7,7 @@ import userRoute from "./user";
 import orderRoute from "./order";
 import cartRoute from "./cart";
 import adminRoute from "./admin";
+import  invalidUrl  from "./invalid_url";
 
 
 const rootRoute: Router=Router();
@@ -32,5 +33,10 @@ rootRoute.use([authMiddleware],orderRoute)
 // admin
 rootRoute.use([authMiddleware,adminMiddleware],adminRoute);
 
-rootRoute.use("*",)
+
+// invalid url
+rootRoute.use("*",invalidUrl);
+
+
+
 export default rootRoute;

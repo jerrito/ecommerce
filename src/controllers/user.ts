@@ -134,3 +134,23 @@ export const updateUser=async(req:Request,res:Response)=>{
   res.status(200).json(updateUser);
 }
 
+
+export const listUsersOrders=async(req:Request, res:Response)=>{
+  let searchClause:any={
+      userId:+req.query?.id!
+  }
+  const status=req.params.status;
+  if(status){
+      searchClause={
+          ...searchClause,
+          status
+      }
+  }
+
+const userOrders=await prismaClient.order.findMany({
+ where:searchClause,
+  skip:+req.query.skip!  || 0,
+  take:5
+});
+res.status(200).json(userOrders);
+}

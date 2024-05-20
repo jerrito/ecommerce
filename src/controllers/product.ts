@@ -32,7 +32,7 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
     const count=await prismaClient.products.count();
 
     const products=await prismaClient.products.findMany({
-        skip: +req.query | 0,
+        skip: +req.query!.skip! | 0,
         take:5
     });
 
@@ -103,6 +103,27 @@ export const getProducts=async(req:Request,res:Response,next:NextFunction)=>{
     }
  }
 
+
+ export const searchProduct=async(req:Request, res:Response, next: NextFunction)=>{
+
+try{
+    // const searchProduct=await prismaClient.products.findMany({
+
+    //     where:{
+    //         name: {
+    //             search:req.query!.q!.toString()
+    //         }
+    //     }
+    // });
+    // res.status(200).json(searchProduct);
+  }catch(e){
+
+   new BadRequest(
+        "Product not found",
+    ErrorCode.ProductNotFound)
+  }
+  
+ }
 
 
 

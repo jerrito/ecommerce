@@ -29,5 +29,6 @@ export const enum ErrorCode {
     Unauthorized = 401,
     AddressNotFound = 405,
     ProductNotFound = 403,
-    OrderNotFound = 409
+    OrderNotFound = 409,
+    UnknownRoute = 404,
 }

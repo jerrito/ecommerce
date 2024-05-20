@@ -7,7 +7,7 @@ import { changeUserRole, listAllUsers } from "../controllers/admin";
 const adminRoute= express.Router();
 
 
-// get al users
+// get all users
 adminRoute.get("/admin/all_users",errorHandler(listAllUsers));
 
 

@@ -4,7 +4,7 @@
 // schema.prisma
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["driverAdapters", "fullTextSearch"]
 }
 
 datasource db {
@@ -67,8 +67,9 @@ model Products{
   createsAt DateTime  @default(now())
   updateAt DateTime @updatedAt
   cart Cart[]
-  orders OrderProducts[]
+  orders OrderProducts[] 
   @@map("products")
+  
 }
 
 
